@@ -14,6 +14,10 @@ function applyStyle() {
       left: '30px',
       top: '10px !important',
     });
+	$('.gm-deleteNoTag').css({
+      left: '91px',
+      top: '10px !important',
+    });
 
     $('.gm-comment').css({
       left: '30px',
@@ -27,6 +31,10 @@ function applyStyle() {
   }else {
     $('.gm-delete').css({
       right: '30px',
+      top: '10px !important',
+    });
+	$('.gm-deleteNoTag').css({
+      right: '91px',
       top: '10px !important',
     });
 
@@ -520,6 +528,13 @@ function appendPostDeleteButton() {
                 data-postid="${postId}"
                 class="gm-initializeDelete" href="#">Delete Post</a>
               </div>
+			  <div class="gm-delete gm-deleteNoTag">
+                <a
+                data-userid="${userId}"
+                data-groupid="${groupId}"
+                data-postid="${postId}"
+                class="gm-initializeDeleteNoTag" href="#">Del</a>
+              </div>
               <div class="gm-comment">
                 <a
                 class="gm-initializeComment"
@@ -786,6 +801,30 @@ $(document).on('click', '.gm-initializeComment', (e) => {
   });
   $(document.body).append(cd);
 
+});
+
+$(document).on('click', '.gm-initializeDeleteNoTag', (e) => {
+	const targetElem = e.target;
+    const groupId = $(targetElem).data('groupid');
+    const userId = $(targetElem).data('userid');
+    const postId = $(targetElem).data('postid');
+    window.groupId = groupId;
+    window.userId = userId;
+    window.deletePostId = postId;
+	
+	deletePost(window.groupId, window.deletePostId, (err) => {
+      if(!err) {
+          commentWithTag(message, tagPostId, window.userId );
+
+      }
+    });
+	let postsHide = $($("div").parent('._4-u2.mbm._4mrt._5jmm._5pat._5v3q._4-u8'))
+    let postHideNew = $("._5pcp._5lel._232_")
+    for( let i=0; i < postsHide.length; i++){
+        if ($(postsHide[i]).attr('id').replace('mall_post_', '').replace(':6:0', '').split('/') == window.deletePostId || $(postHideNew[i]).attr('id').replace('feed_subtitle_', '').replace(':6:0', '').split('/') == window.deletePostId ){
+            $($("div").parent('._4-u2.mbm._4mrt._5jmm._5pat._5v3q._4-u8')[i]).css("display", "none");
+           }
+    }
 });
 
 $(document).on('click', '.gm-initializeDelete', (e) => {
