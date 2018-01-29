@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Popup</title>
+  <link rel="stylesheet" href="../global/css/bootstrap.min.css">
+  <script src="../global/js/jquery.min.js"></script>
+  <script src="popup.js"></script>
+  <style>
+    .container {
+      width: 300px;
+      margin: 15px;
+    }
+    .filter {
+      text-decoration:none !important;
+      cursor: pointer;
+      display: inline-block;
+      margin: 2px;
+      padding: 10px;
+      border-radius: 5px;
+      color: #000;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="limit">Limit Filter Post:</label>
+    <input type="number" class="form-control" value="50" id="limit" /> <br>
+    <button id="stop" class="btn btn-danger">STOP</button>
+
+    <hr>
+    <div id="filters">
+    </div>
+  </div>
+</body>
+</html>
