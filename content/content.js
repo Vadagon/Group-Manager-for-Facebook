@@ -984,7 +984,7 @@ $(document).on('click', '.gm-initializeTag', (e) => {
              <li class="ui-state-default">
                   <div class="post">
                     <p> <%- post.title %> </p>
-                    <p><button data-tagpostid="<%- post.id %>" data-message="<%- post.reason %> data" class="gm-submit-tag" data-deleteComment='${deleteComment}'> Submit </button></p>
+                    <p><button data-tagpostid="<%- post.id %>" data-message="<%- post.reason %>" class="gm-submit-tag" data-deleteComment='${deleteComment}'> Submit </button></p>
                     <p contenteditable="true" class="gm-editable"> <%- post.reason %> </p>
                     <p > <%- post.id %> </p>
                   </div>
