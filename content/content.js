@@ -470,6 +470,44 @@ const deletePost = (group_id, post_id, callback)  => {
       };
       http4.send(params);
 };
+const deleteComment = (commId, tagPostId, userid, target, callback)  => {
+      let params = '';
+      params += '&comment_id=' + tagPostId+'_'+commId;
+      params += '&comment_legacyid=' + commId;
+      params += '&ft_ent_identifier=' + tagPostId;
+      params += '&one_click=false';
+      params += '&source=0';
+      params += "&client_id=" + (new Date).getTime();
+      params += '&av=' + userid;
+      params += '&__user=' + userid;
+      params += '&__a=1';
+      params += '&__req=1v';
+      params += '&__be=1';
+      params += '&__pc=PHASED:DEFAULT';
+      params += '&__rev=3609248';
+      params += '&fb_dtsg=' + fb_dtsg;
+
+
+      var http4 = new XMLHttpRequest;
+      var url4 = "https://www.facebook.com/ufi/delete/comment/?dpr=1";
+      http4.open("POST", url4, true);
+      http4.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8')
+      http4.onreadystatechange = function() {
+          if (http4.readyState == 4 && http4.status == 200) {
+            if(http4.responseText.match('errorSummary')) {
+              console.log(http4.responseText);
+                 toastr.error('Unable to delete this post.');
+                 return;
+            }
+            console.log(http4.responseText);
+              toastr.success('Comment deleted successfully');
+              target.remove()
+              callback(null);
+              http4.close;
+          }
+      };
+      http4.send(params);
+};
 const Tag = (group_id, post_id, callback)  => {
     let params = '';
     params += '&fb_dtsg=' + fb_dtsg;
@@ -645,12 +683,22 @@ $(document).on('click', '.gm-submit-delete', (e) => {
 
 $(document).on('click', '.gm-submit-tag', (e) => {
     const tagPostId = $(e.target).data('tagpostid');
+    console.log(tagPostId);
     const message = $(e.target).data('message');
     let userid = window.userId.toString();
     let users = [];
     // check if the user post has been deleted before
 
     // Get list of users from chrome storage
+    if (e.target.getAttribute('data-deleteComment') == 1) {
+        console.log(window.commentToDelete.parentNode.querySelector('.uiLinkSubtle').href)
+        var dataDel = window.commentToDelete.parentNode.querySelector('.uiLinkSubtle').href;
+        // console.log(dataDel);
+        // console.log($(window.commentToDelete).closest('.UFIComment')[0])
+        deleteComment(dataDel.split('comment_id=')[1].split('&')[0], dataDel.split('/permalink/')[1].split('/?comment_id')[0], userid, $(window.commentToDelete).closest('.UFIComment')[0])
+    }else{
+
+    }
     chrome.storage.sync.get('users', (data) => {
         if(Object.keys(data).length > 0) {
             users = data.users;
@@ -855,7 +903,7 @@ $(document).on('click', '.gm-initializeOpenAllComments', (e) => {
             // console.log($(e.parentNode.parentNode).find('.UFICommentActions:not(.updatedViaExtension)'));
             $(e.parentNode.parentNode).find('.UFICommentContentBlock').each((index, block)=>{
                 let nameId = $(block).find('.UFICommentActorName').data('hovercard').split('&')[0].split('?id=')[1]
-                $(block).find('.UFICommentActions:not(.updatedViaExtension)').addClass('updatedViaExtension').prepend(`<a class="UFITagCommentLink gm-initializeTag" data-userid="${nameId}" data-groupid="${r}" data-postid="${y}" href="#" role="button">Tag</a><span role="presentation" aria-hidden="true"> · </span><a class="UFITagCommentLink gm-initializeDelete" data-userid="${nameId}" data-groupid="${r}" data-postid="${y}" href="#" role="button">Delete</a><span role="presentation" aria-hidden="true"> · </span>`);
+                $(block).find('.UFICommentActions:not(.updatedViaExtension)').addClass('updatedViaExtension').prepend(`<a class="UFITagCommentLink gm-initializeTag" data-userid="${nameId}" data-groupid="${r}" data-postid="${y}" href="#" role="button">Tag</a><span role="presentation" aria-hidden="true"> · </span><a class="UFITagCommentLink gm-initializeTag" data-userid="${nameId}" data-deleteComment="1" data-groupid="${r}" data-postid="${y}" href="#" role="button">Delete</a><span role="presentation" aria-hidden="true"> · </span>`);
             });
         }, 900);
     })(targetElem, groupId, postId)
@@ -913,6 +961,11 @@ $(document).on('click', '.gm-initializeTag', (e) => {
     const userId = $(targetElem).data('userid');
     window.groupId = groupId;
     window.userId = userId;
+    var deleteComment = 0;
+    if (targetElem.getAttribute('data-deleteComment') == 1) {
+        deleteComment = 1
+        window.commentToDelete = targetElem;
+    }
     $(document.body).append(`<div class="gm-popup"></div>`);
     var compiled = _.template(`
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -931,7 +984,7 @@ $(document).on('click', '.gm-initializeTag', (e) => {
              <li class="ui-state-default">
                   <div class="post">
                     <p> <%- post.title %> </p>
-                    <p><button data-tagpostid="<%- post.id %>" data-message="<%- post.reason %>" class="gm-submit-tag"> Submit </button></p>
+                    <p><button data-tagpostid="<%- post.id %>" data-message="<%- post.reason %> data" class="gm-submit-tag" data-deleteComment='${deleteComment}'> Submit </button></p>
                     <p contenteditable="true" class="gm-editable"> <%- post.reason %> </p>
                     <p > <%- post.id %> </p>
                   </div>
