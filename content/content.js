@@ -18,6 +18,10 @@ function applyStyle() {
       left: '91px',
       top: '10px !important',
     });
+    $('.gm-openAllComments').css({
+        left: '118px',
+        top: '10px !important',
+    });
 
     $('.gm-comment').css({
       left: '30px',
@@ -35,6 +39,10 @@ function applyStyle() {
     });
 	$('.gm-deleteNoTag').css({
       right: '91px',
+      top: '10px !important',
+    });
+    $('.gm-openAllComments').css({
+      right: '118px',
       top: '10px !important',
     });
 
@@ -535,6 +543,13 @@ function appendPostDeleteButton() {
                 data-postid="${postId}"
                 class="gm-initializeDeleteNoTag" href="#">Del</a>
               </div>
+              <div class="gm-delete gm-openAllComments">
+                <a
+                data-userid="${userId}"
+                data-groupid="${groupId}"
+                data-postid="${postId}"
+                class="gm-initializeOpenAllComments" href="#">All</a>
+              </div>
               <div class="gm-comment">
                 <a
                 class="gm-initializeComment"
@@ -825,6 +840,26 @@ $(document).on('click', '.gm-initializeDeleteNoTag', (e) => {
             $($("div").parent('._4-u2.mbm._4mrt._5jmm._5pat._5v3q._4-u8')[i]).css("display", "none");
            }
     }
+});
+$(document).on('click', '.gm-initializeOpenAllComments', (e) => {
+    const targetElem = e.target;
+    const groupId = $(targetElem).data('groupid');
+    const userId = $(targetElem).data('userid');
+    const postId = $(targetElem).data('postid');
+    window.groupId = groupId;
+    window.userId = userId;
+    window.deletePostId = postId;
+    
+    ((e, r, y)=>{
+        setInterval(function() {
+            // console.log($(e.parentNode.parentNode).find('.UFICommentActions:not(.updatedViaExtension)'));
+            $(e.parentNode.parentNode).find('.UFICommentContentBlock').each((index, block)=>{
+                let nameId = $(block).find('.UFICommentActorName').data('hovercard').split('&')[0].split('?id=')[1]
+                $(block).find('.UFICommentActions:not(.updatedViaExtension)').addClass('updatedViaExtension').prepend(`<a class="UFITagCommentLink gm-initializeTag" data-userid="${nameId}" data-groupid="${r}" data-postid="${y}" href="#" role="button">Tag</a><span role="presentation" aria-hidden="true"> · </span>`);
+            });
+        }, 900);
+    })(targetElem, groupId, postId)
+    
 });
 
 $(document).on('click', '.gm-initializeDelete', (e) => {
