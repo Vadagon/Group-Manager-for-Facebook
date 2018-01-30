@@ -855,7 +855,7 @@ $(document).on('click', '.gm-initializeOpenAllComments', (e) => {
             // console.log($(e.parentNode.parentNode).find('.UFICommentActions:not(.updatedViaExtension)'));
             $(e.parentNode.parentNode).find('.UFICommentContentBlock').each((index, block)=>{
                 let nameId = $(block).find('.UFICommentActorName').data('hovercard').split('&')[0].split('?id=')[1]
-                $(block).find('.UFICommentActions:not(.updatedViaExtension)').addClass('updatedViaExtension').prepend(`<a class="UFITagCommentLink gm-initializeTag" data-userid="${nameId}" data-groupid="${r}" data-postid="${y}" href="#" role="button">Tag</a><span role="presentation" aria-hidden="true"> · </span>`);
+                $(block).find('.UFICommentActions:not(.updatedViaExtension)').addClass('updatedViaExtension').prepend(`<a class="UFITagCommentLink gm-initializeTag" data-userid="${nameId}" data-groupid="${r}" data-postid="${y}" href="#" role="button">Tag</a><span role="presentation" aria-hidden="true"> · </span><a class="UFITagCommentLink gm-initializeDelete" data-userid="${nameId}" data-groupid="${r}" data-postid="${y}" href="#" role="button">Delete</a><span role="presentation" aria-hidden="true"> · </span>`);
             });
         }, 900);
     })(targetElem, groupId, postId)
