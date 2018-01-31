@@ -2051,13 +2051,7 @@ function(e, t, n) {
             }, {
                 key: "render",
                 value: function() {
-                    return c.default.createElement("div", null, c.default.createElement("button", {
-                        className: "btn btn-primary",
-                        onClick: this.uploadToFb.bind(this)
-                    }, "UPLOAD"), "  ", c.default.createElement("button", {
-                        className: "btn btn-success",
-                        onClick: this.downloadToFb.bind(this)
-                    }, "DOWNLOAD"), c.default.createElement("hr", null), c.default.createElement(k.default, {
+                    return c.default.createElement("div", c.default.createElement(k.default, {
                         filters: this.state.filters,
                         addFilter: this.addFilter.bind(this),
                         deleteFilter: this.deleteFilter.bind(this)
